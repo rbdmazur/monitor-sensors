@@ -5,6 +5,9 @@ import by.rbdmazur.monitorsensor.service.SensorService;
 import by.rbdmazur.monitorsensor.controller.responses.SensorsResponse;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.List;
+
 @RestController
 @RequestMapping("api/sensors")
 public class SensorController {
@@ -16,9 +19,16 @@ public class SensorController {
     }
 
     @GetMapping
-    public SensorsResponse getSensors() {
-        SensorsResponse response = new SensorsResponse(sensorService.findAll());
-        return response;
+    public SensorsResponse getSensors(
+            @RequestParam(name = "search_q", required = false) String searchQ
+    ) {
+        List<Sensor> resultList;
+        if (searchQ == null) {
+            resultList = sensorService.findAll();
+        } else {
+            resultList = sensorService.findByQuery(searchQ);
+        }
+        return new SensorsResponse(resultList);
     }
 
     @PostMapping
@@ -34,17 +44,5 @@ public class SensorController {
     @PutMapping(path = "edit/{id}")
     public void updateSensor(@PathVariable Long id, @RequestBody Sensor sensor) {
         sensorService.update(id, sensor);
-    }
-
-    @GetMapping(path = "search/name")
-    public SensorsResponse getSensorsByName(@RequestParam String name) {
-        SensorsResponse response = new SensorsResponse(sensorService.findByName(name));
-        return response;
-    }
-
-    @GetMapping(path = "search/model")
-    public SensorsResponse getSensorsByModel(@RequestParam String model) {
-        SensorsResponse response = new SensorsResponse(sensorService.findByModel(model));
-        return response;
     }
 }

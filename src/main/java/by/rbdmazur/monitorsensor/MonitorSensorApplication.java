@@ -1,6 +1,5 @@
 package by.rbdmazur.monitorsensor;
 
-import by.rbdmazur.monitorsensor.repository.model.Sensor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

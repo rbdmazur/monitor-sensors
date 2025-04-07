@@ -7,9 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface SensorRepository extends JpaRepository<Sensor, Long> {
-    @Query(value = "select * from sensors where lower(name) ~ lower(:name) ", nativeQuery = true)
-    List<Sensor> searchByName(String name);
-
-    @Query(value = "select * from sensors where lower(model) ~ lower(:model)", nativeQuery = true)
-    List<Sensor> searchByModel(String model);
+    @Query(value = "select * from sensors where lower(name) ~ lower(:query) or lower(model) ~ lower(:query)", nativeQuery = true)
+    List<Sensor> searchSensor(String query);
 }

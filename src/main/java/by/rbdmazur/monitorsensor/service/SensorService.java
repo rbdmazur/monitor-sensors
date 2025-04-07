@@ -79,11 +79,7 @@ public class SensorService {
         }
     }
 
-    public List<Sensor> findByName(String name) {
-        return sensorRepository.searchByName(name);
-    }
-
-    public List<Sensor> findByModel(String model) {
-        return sensorRepository.searchByModel(model);
+    public List<Sensor> findByQuery(String query) {
+        return sensorRepository.searchSensor(query);
     }
 }
