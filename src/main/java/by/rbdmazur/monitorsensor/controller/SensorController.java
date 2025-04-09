@@ -18,15 +18,8 @@ public class SensorController {
     }
 
     @GetMapping
-    public SensorsResponse getSensors(
-            @RequestParam(name = "search_q", required = false) String searchQ
-    ) {
-        List<Sensor> resultList;
-        if (searchQ == null) {
-            resultList = sensorService.findAll();
-        } else {
-            resultList = sensorService.findByQuery(searchQ);
-        }
+    public SensorsResponse getSensors() {
+        List<Sensor> resultList = sensorService.findAll();
         return new SensorsResponse(resultList);
     }
 
@@ -48,5 +41,17 @@ public class SensorController {
     @PutMapping(path = "edit/{id}")
     public void updateSensor(@PathVariable Long id, @RequestBody Sensor sensor) {
         sensorService.update(id, sensor);
+    }
+
+    @GetMapping(path="/search/name")
+    public SensorsResponse findByName(@RequestParam(required = false) String name) {
+        List<Sensor> resultList = sensorService.findByName(name);
+        return new SensorsResponse(resultList);
+    }
+
+    @GetMapping(path = "/search/model")
+    public SensorsResponse findByModel(@RequestParam(required = false) String model) {
+        List<Sensor> resultList = sensorService.findByModel(model);
+        return new SensorsResponse(resultList);
     }
 }

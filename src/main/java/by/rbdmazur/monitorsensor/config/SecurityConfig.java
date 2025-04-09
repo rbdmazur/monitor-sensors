@@ -23,6 +23,10 @@ public class SecurityConfig {
             "api/sensors/edit", "api/sensors/delete", "api/sensors/create"
     };
 
+    private static final String[] AUTH_VIEWER_LIST = {
+            "api/sensors", "api/sensors/search/**"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -30,7 +34,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("api/auth/**").permitAll()
                         .requestMatchers(AUTH_ADMIN_LIST).hasRole("ADMIN")
-                        .requestMatchers("api/sensors").authenticated()
+                        .requestMatchers(AUTH_VIEWER_LIST).authenticated()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
