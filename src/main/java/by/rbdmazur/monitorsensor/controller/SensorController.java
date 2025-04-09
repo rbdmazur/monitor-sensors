@@ -1,8 +1,10 @@
 package by.rbdmazur.monitorsensor.controller;
 
+import by.rbdmazur.monitorsensor.controller.requests.SensorRequest;
 import by.rbdmazur.monitorsensor.repository.model.Sensor;
 import by.rbdmazur.monitorsensor.service.SensorService;
 import by.rbdmazur.monitorsensor.controller.responses.SensorsResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,40 +20,56 @@ public class SensorController {
     }
 
     @GetMapping
-    public SensorsResponse getSensors() {
+    public ResponseEntity<?> getSensors() {
         List<Sensor> resultList = sensorService.findAll();
-        return new SensorsResponse(resultList);
-    }
-
-    @GetMapping("test")
-    public String test() {
-        return "test";
+        return ResponseEntity.ok().body(new SensorsResponse(resultList));
     }
 
     @PostMapping(path = "create")
-    public void createSensor(@RequestBody Sensor sensor) {
-        sensorService.save(sensor);
+    public ResponseEntity<?> createSensor(@RequestBody SensorRequest sensorRequest) {
+        try {
+            sensorService.save(sensorRequest);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
     }
 
     @DeleteMapping(path = "delete/{id}")
-    public void deleteSensor(@PathVariable Long id) {
-        sensorService.delete(id);
+    public ResponseEntity<?> deleteSensor(@PathVariable Long id) {
+        try {
+            sensorService.delete(id);
+            return ResponseEntity.ok().build();
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
     }
 
     @PutMapping(path = "edit/{id}")
-    public void updateSensor(@PathVariable Long id, @RequestBody Sensor sensor) {
-        sensorService.update(id, sensor);
+    public ResponseEntity<?> updateSensor(@PathVariable Long id, @RequestBody SensorRequest sensorRequest) {
+        try {
+            sensorService.update(id, sensorRequest);
+            return ResponseEntity.ok().build();
+        } catch (IllegalStateException | IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
     }
 
     @GetMapping(path="/search/name")
-    public SensorsResponse findByName(@RequestParam(required = false) String name) {
+    public ResponseEntity<?> findByName(@RequestParam(required = false, name="q") String name) {
         List<Sensor> resultList = sensorService.findByName(name);
-        return new SensorsResponse(resultList);
+        return ResponseEntity.ok().body(new SensorsResponse(resultList));
     }
 
     @GetMapping(path = "/search/model")
-    public SensorsResponse findByModel(@RequestParam(required = false) String model) {
+    public ResponseEntity<?> findByModel(@RequestParam(required = false, name="q") String model) {
         List<Sensor> resultList = sensorService.findByModel(model);
-        return new SensorsResponse(resultList);
+        return ResponseEntity.ok().body(new SensorsResponse(resultList));
     }
 }
