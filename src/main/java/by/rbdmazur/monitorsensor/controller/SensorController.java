@@ -5,7 +5,6 @@ import by.rbdmazur.monitorsensor.service.SensorService;
 import by.rbdmazur.monitorsensor.controller.responses.SensorsResponse;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -31,7 +30,12 @@ public class SensorController {
         return new SensorsResponse(resultList);
     }
 
-    @PostMapping
+    @GetMapping("test")
+    public String test() {
+        return "test";
+    }
+
+    @PostMapping(path = "create")
     public void createSensor(@RequestBody Sensor sensor) {
         sensorService.save(sensor);
     }
