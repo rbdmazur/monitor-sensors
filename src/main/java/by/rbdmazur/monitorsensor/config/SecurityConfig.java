@@ -27,12 +27,29 @@ public class SecurityConfig {
             "api/sensors", "api/sensors/search/**"
     };
 
+    private static final String[] SWAGGER_WHITELIST = {
+            // -- Swagger UI v2
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/api-docs.yaml",
+            "/webjars/**",
+            // -- Swagger UI v3 (OpenAPI)
+            "/v3/api-docs/**",
+            "/swagger-ui/**"
+            // other public endpoints of your API may be appended to this array
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("api/auth/**").permitAll()
+                        .requestMatchers(SWAGGER_WHITELIST).permitAll()
                         .requestMatchers(AUTH_ADMIN_LIST).hasRole("ADMIN")
                         .requestMatchers(AUTH_VIEWER_LIST).authenticated()
                         .anyRequest().authenticated()

@@ -47,6 +47,7 @@ public class Sensor {
             throw new IllegalArgumentException("Invalid type format");
         }
     }
+
 }
 
 
